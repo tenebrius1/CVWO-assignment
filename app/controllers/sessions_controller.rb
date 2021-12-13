@@ -1,7 +1,8 @@
 class SessionsController < ApplicationController
   skip_before_action :verify_authenticity_token
 
-  def new; end
+  def new
+  end
 
   def create
     user = User.find_by(username: params[:username])
@@ -9,12 +10,9 @@ class SessionsController < ApplicationController
     if user.present? && user.authenticate(params[:password])
       # sets up user.id sessions
       session[:user_id] = user.id
-      redirect_to root_path, notice: 'Logged in successfully'
+      redirect_to root_path
     else
-      puts params[:username]
-      puts params[:password]
-      # flash.now[:alert] = 'Invalid username or password'
-      redirect_to sign_up_url, format: :json
+      render json: {type: "error", msg: "Incorrect username or password", url: sign_in_path}
     end
   end
 
