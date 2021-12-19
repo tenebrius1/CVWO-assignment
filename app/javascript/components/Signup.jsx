@@ -1,18 +1,15 @@
 import React from "react"
 import {Col, Form, Button, Container, Row, Navbar, InputGroup, Alert} from "react-bootstrap";
-import {Lock, EyeFill, EyeSlashFill} from "react-bootstrap-icons";
+import {PersonPlus, EyeFill, EyeSlashFill} from "react-bootstrap-icons";
 import * as yup from 'yup'
 import {Formik} from "formik";
 import axios from "axios"
 
-class Signin extends React.Component {
+class Signup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            show: false,
             passwordShown: false,
-            type: "",
-            msg: ""
         };
     }
 
@@ -21,20 +18,9 @@ class Signin extends React.Component {
         password: yup.string().required(),
     });
 
-    classes = {
-        error: 'danger',
-        alert: 'warning',
-        notice: 'info',
-        success: 'success'
-    };
-
     togglePasswordVisibility = () => {
         this.setState({passwordShown: !this.state.passwordShown});
     };
-
-    setShow(b) {
-        this.setState({show: b})
-    }
 
     render() {
         const eye = <EyeFill/>
@@ -48,7 +34,7 @@ class Signin extends React.Component {
                         <Navbar.Toggle/>
                         <Navbar.Collapse className="justify-content-end">
                             <Navbar.Text>
-                                <a href="/sign_up">Sign up</a>
+                                <a href="/sign_in">Log In</a>
                             </Navbar.Text>
                         </Navbar.Collapse>
                     </Container>
@@ -56,19 +42,13 @@ class Signin extends React.Component {
                 <Formik
                     validationSchema={this.schema}
                     onSubmit={(values) => {
-                        axios.post("/sign_in", {
-                            username: values.username,
-                            password: values.password
-                        }).then(res => {
-                            if (res.data.url) {
-                                location.href = res.data.url;
-                            } else {
-                                this.setState({
-                                    show: true,
-                                    type: res.data["type"],
-                                    msg: res.data["msg"],
-                                });
+                        axios.post("/sign_up", {
+                            user: {
+                                username: values.username,
+                                password: values.password
                             }
+                        }).then(res => {
+                            location.href = res.data.url;
                         })
                     }}
                     initialValues={{
@@ -87,8 +67,8 @@ class Signin extends React.Component {
                       }) => (
                         <Container>
                             <Row className="justify-content-center mt-5">
-                                <Lock size={28}/>
-                                <h3 className="text-center">Sign in</h3>
+                                <PersonPlus size={28}/>
+                                <h3 className="text-center">Sign up</h3>
                                 <Col xs="10" md="4">
                                     <Form noValidate onSubmit={handleSubmit}>
                                         <Form.Group className="mb-3" controlId="formBasicUsername">
@@ -116,15 +96,9 @@ class Signin extends React.Component {
                                                 </Form.Control.Feedback>
                                             </InputGroup>
                                         </Form.Group>
-                                        <Alert variant={this.classes[this.state.type]} show={this.state.show}
-                                               onClose={() => this.setShow(false)} dismissible>
-                                            <p>
-                                                {this.state.msg}
-                                            </p>
-                                        </Alert>
                                         <div className="d-grid gap-2 mt-4">
                                             <Button variant="primary" type="submit">
-                                                Sign In
+                                                Register
                                             </Button>
                                         </div>
                                     </Form>
@@ -138,4 +112,4 @@ class Signin extends React.Component {
     }
 }
 
-export default Signin
+export default Signup

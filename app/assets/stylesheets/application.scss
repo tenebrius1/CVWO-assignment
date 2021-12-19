@@ -14,3 +14,35 @@
  *= require_self
  */
 @import "bootstrap";
+
+.eye {
+  cursor: pointer;
+}
+
+.form-check-input[type="checkbox"] {
+  transform: scale(1.2);
+  margin-top: 0.4rem;
+}
+
+.form-check-label {
+  font-size: 1.12rem;
+  margin-bottom: 0.1rem;
+}
+
+input[type=checkbox]:checked + .form-check-label {
+  text-decoration: line-through;
+}
+
+.container {
+  max-width: 58%;
+}
+
+.item {
+  border-style: solid;
+  padding-left: 1rem;
+  border-radius: 0.4rem;
+  border-color: #E9E9E9;
+  background-color: #E9E9E9;
+  min-height: 2rem;
+  max-width: 70%;
+}
