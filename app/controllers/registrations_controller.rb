@@ -10,11 +10,13 @@ class RegistrationsController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
+      puts "hello"
       # stores saved user id in a session
       session[:user_id] = @user.id
       render json: {url: sign_in_path}
     else
-      render :new
+      puts "here"
+      render json: {type: "error", msg: "Username is already taken, please choose another username!"}
     end
   end
 

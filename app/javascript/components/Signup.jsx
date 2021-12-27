@@ -9,7 +9,10 @@ class Signup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            show: false,
             passwordShown: false,
+            type: "",
+            msg: "",
         };
     }
 
@@ -18,8 +21,19 @@ class Signup extends React.Component {
         password: yup.string().required(),
     });
 
+    setShow(b) {
+        this.setState({show: b})
+    }
+
     togglePasswordVisibility = () => {
         this.setState({passwordShown: !this.state.passwordShown});
+    };
+
+    classes = {
+        error: 'danger',
+        alert: 'warning',
+        notice: 'info',
+        success: 'success'
     };
 
     render() {
@@ -48,7 +62,15 @@ class Signup extends React.Component {
                                 password: values.password
                             }
                         }).then(res => {
-                            location.href = res.data.url;
+                            if (res.data.url) {
+                                location.href = res.data.url;
+                            } else {
+                                this.setState({
+                                    show: true,
+                                    type: res.data["type"],
+                                    msg: res.data["msg"],
+                                });
+                            }
                         })
                     }}
                     initialValues={{
@@ -96,6 +118,12 @@ class Signup extends React.Component {
                                                 </Form.Control.Feedback>
                                             </InputGroup>
                                         </Form.Group>
+                                        <Alert variant={this.classes[this.state.type]} show={this.state.show}
+                                               onClose={() => this.setShow(false)} dismissible>
+                                            <p>
+                                                {this.state.msg}
+                                            </p>
+                                        </Alert>
                                         <div className="d-grid gap-2 mt-4">
                                             <Button variant="primary" type="submit">
                                                 Register
