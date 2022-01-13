@@ -3,6 +3,8 @@ Rails.application.routes.draw do
   get 'todos', to: 'todos#new'
   post 'todos', to: 'todos#create'
   post 'update_todo', to: 'todos#update'
+  post 'delete_todo', to: 'todos#delete'
+  post 'edit_todo', to: 'todos#edit'
   post 'search', to: "todos#search"
   get 'sign_up', to: 'registrations#new'
   post 'sign_up', to: 'registrations#create'

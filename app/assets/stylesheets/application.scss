@@ -37,12 +37,10 @@ input[type=checkbox]:checked + .form-check-label {
   max-width: 58%;
 }
 
-.item {
-  border-style: solid;
-  padding-left: 1rem;
-  border-radius: 0.4rem;
-  border-color: #E9E9E9;
-  background-color: #E9E9E9;
-  min-height: 2rem;
-  max-width: 70%;
+.todo-strike {
+  text-decoration: line-through;
+}
+
+.trash-icon {
+  cursor: pointer;
 }

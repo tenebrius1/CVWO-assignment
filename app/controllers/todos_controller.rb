@@ -34,6 +34,24 @@ class TodosController < ApplicationController
     render json: { incomplete: User.find_by(id: session[:user_id]).todo_incompletes, complete: User.find_by(id: session[:user_id]).todo_completeds }
   end
 
+  # Handles updating of database when user updates the title of a todo
+  def edit
+    new_title = params[:title]
+    id = params[:id]
+
+    incomplete_list = User.find_by(id: session[:user_id]).todo_incompletes
+    complete_list = User.find_by(id: session[:user_id]).todo_completeds
+
+    if params[:done]
+      todo = complete_list.find(id)
+      todo.update(title: new_title)
+    else
+      todo = incomplete_list.find(id)
+      todo.update(title: new_title)
+    end
+    render json: { incomplete: User.find_by(id: session[:user_id]).todo_incompletes, complete: User.find_by(id: session[:user_id]).todo_completeds }
+  end
+
   def search
     query = params[:query]
     incomplete_list = User.find_by(id: session[:user_id]).todo_incompletes
@@ -41,6 +59,21 @@ class TodosController < ApplicationController
     incomplete_filtered = incomplete_list.where("lower(title) LIKE lower(?)", "%#{query}%")
     complete_filtered = complete_list.where("lower(title) LIKE lower(?)", "%#{query}%")
     render json: {incomplete: incomplete_filtered, complete: complete_filtered}
+  end
+
+  # Handles updating of database when user deletes a todo
+  def delete
+    title = params[:title]
+
+    incomplete_list = User.find_by(id: session[:user_id]).todo_incompletes
+    complete_list = User.find_by(id: session[:user_id]).todo_completeds
+
+    if params[:done]
+      complete_list.where(title: title).destroy_all
+    else
+      incomplete_list.where(title: title).destroy_all
+    end
+    render json: { incomplete: User.find_by(id: session[:user_id]).todo_incompletes, complete: User.find_by(id: session[:user_id]).todo_completeds }
   end
 
   private
