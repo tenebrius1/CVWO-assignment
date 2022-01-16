@@ -3,8 +3,6 @@ checks:
   method-lines:
     config:
       threshold: 50
-  similar-code:
-    enabled: false
 exclude_patterns:
   - "config/"
   - "db/"
