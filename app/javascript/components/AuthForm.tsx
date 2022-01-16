@@ -40,10 +40,50 @@ function ErrorAlert(props) {
     )
 }
 
+function UsernameForm(props) {
+    return (
+        <Form.Group className="mb-3" controlId="formBasicUsername">
+            <Form.Label>Username</Form.Label>
+            <Form.Control type="text" name="username" placeholder="Enter username"
+                          onChange={props.handleChange}
+                          isInvalid={!!props.errors.username} value={props.username}/>
+            <Form.Control.Feedback type="invalid">
+                Please enter your username!
+            </Form.Control.Feedback>
+        </Form.Group>
+    )
+}
+
+function PasswordForm(props) {
+    const eye = <EyeFill/>
+    const eyeSlash = <EyeSlashFill/>
+
+    return (
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+            <Form.Label>Password</Form.Label>
+            <InputGroup hasValidation>
+                <Form.Control type={props.passwordShown ? "text" : "password"}
+                              name="password"
+                              onChange={props.handleChange}
+                              isInvalid={!!props.errors.password} value={props.password}
+                              placeholder="Password"/>
+                <InputGroup.Text className="eye">
+                    <i onClick={props.togglePasswordVisibility}>{props.passwordShown ? eyeSlash : eye}</i>
+                </InputGroup.Text>
+                <Form.Control.Feedback type="invalid">
+                    Please enter your password!
+                </Form.Control.Feedback>
+            </InputGroup>
+        </Form.Group>
+    )
+}
+
 class AuthForm extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.setShow = this.setShow.bind(this);
+        this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
     }
 
     state: State = {
@@ -92,8 +132,6 @@ class AuthForm extends React.Component<Props, State> {
     }
 
     render() {
-        const eye = <EyeFill/>
-        const eyeSlash = <EyeSlashFill/>
         const icon = this.props.icon;
 
         return (
@@ -119,31 +157,11 @@ class AuthForm extends React.Component<Props, State> {
                             <h3 className="text-center">{this.props.title}</h3>
                             <Col xs="10" md="4">
                                 <Form noValidate onSubmit={handleSubmit}>
-                                    <Form.Group className="mb-3" controlId="formBasicUsername">
-                                        <Form.Label>Username</Form.Label>
-                                        <Form.Control type="text" name="username" placeholder="Enter username"
-                                                      onChange={handleChange}
-                                                      isInvalid={!!errors.username} value={values.username}/>
-                                        <Form.Control.Feedback type="invalid">
-                                            Please enter your username!
-                                        </Form.Control.Feedback>
-                                    </Form.Group>
-                                    <Form.Group className="mb-3" controlId="formBasicPassword">
-                                        <Form.Label>Password</Form.Label>
-                                        <InputGroup hasValidation>
-                                            <Form.Control type={this.state.passwordShown ? "text" : "password"}
-                                                          name="password"
-                                                          onChange={handleChange}
-                                                          isInvalid={!!errors.password} value={values.password}
-                                                          placeholder="Password"/>
-                                            <InputGroup.Text className="eye">
-                                                <i onClick={this.togglePasswordVisibility}>{this.state.passwordShown ? eyeSlash : eye}</i>
-                                            </InputGroup.Text>
-                                            <Form.Control.Feedback type="invalid">
-                                                Please enter your password!
-                                            </Form.Control.Feedback>
-                                        </InputGroup>
-                                    </Form.Group>
+                                    <UsernameForm handleChange={handleChange} errors={errors}
+                                                  username={values.username}/>
+                                    <PasswordForm passwordShown={this.state.passwordShown} handleChange={handleChange}
+                                                  errors={errors} password={values.password}
+                                                  togglePasswordVisibility={this.togglePasswordVisibility}/>
                                     <ErrorAlert variant={this.classes[this.state.type]} show={this.state.show}
                                                 setShow={this.setShow} msg={this.state.msg}/>
                                     <CTAButton buttonText={this.props.buttonText}/>
