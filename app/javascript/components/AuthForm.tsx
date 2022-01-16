@@ -79,13 +79,6 @@ function PasswordForm(props) {
 }
 
 class AuthForm extends React.Component<Props, State> {
-    constructor(props) {
-        super(props);
-        this.setShow = this.setShow.bind(this);
-        this.togglePasswordVisibility = this.togglePasswordVisibility.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
     state: State = {
         show: false,
         passwordShown: false,
@@ -109,11 +102,11 @@ class AuthForm extends React.Component<Props, State> {
         this.setState({passwordShown: !this.state.passwordShown});
     };
 
-    setShow(b) {
+    setShow = b => {
         this.setState({show: b})
     }
 
-    handleSubmit(username, password) {
+    handleSubmit = (username, password) => {
         let url = this.props.url;
         axios.post(url, {
             username: username,

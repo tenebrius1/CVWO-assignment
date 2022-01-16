@@ -41,12 +41,12 @@ function DisplayTodos(props) {
                 <tr key={todo.id}>
                     <td>
                         <Form.Check defaultChecked={props.done} type="checkbox"
-                                    onClick={() => props.handleUpdate(todo.title)}/>
+                                    onClick={() => props.handleUpdate(todo.title, "update")}/>
                     </td>
                     <NameDisplay done={props.done} todo={todo} handleEdit={props.handleEdit} editId={props.editId}
                                  handleChange={props.handleChange}/>
                     <td>
-                        <TrashFill onClick={() => props.handleDelete(todo.title)} className="trash-icon"/>
+                        <TrashFill onClick={() => props.handleUpdate(todo.title, "delete")} className="trash-icon"/>
                     </td>
                 </tr>
             )
@@ -71,44 +71,36 @@ function DisplayTable(props) {
 }
 
 class TodoList extends React.Component<Props, State> {
-    constructor(props) {
-        super(props);
-        this.handleUpdate = this.handleUpdate.bind(this);
-        this.handleChange = this.handleChange.bind(this);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-    }
-
     state: State = {
         incomplete_to_complete: this.props.incomplete_to_complete,
         editId: -1,
     }
 
-    handleUpdate(title) {
-        axios.post("/update_todo", {
-            title: title,
-            incomplete_to_complete: this.state.incomplete_to_complete,
-        }).then(res => {
+    handleUpdate = (title, intent) => {
+        let post;
+        if (intent === "update") {
+            post = axios.post("/update_todo", {
+                title: title,
+                incomplete_to_complete: this.state.incomplete_to_complete,
+            })
+        } else if (intent === "delete") {
+            post = axios.post("/delete_todo", {
+                title: title,
+                done: this.props.done,
+            })
+        }
+        post.then(res => {
             this.props.updateLists(res.data.incomplete, res.data.complete);
         })
     }
 
-    handleDelete(title) {
-        axios.post("/delete_todo", {
-            title: title,
-            done: this.props.done,
-        }).then(res => {
-            this.props.updateLists(res.data.incomplete, res.data.complete);
-        })
-    }
-
-    handleEdit(id) {
+    handleEdit = id => {
         this.setState({
             editId: id
         })
     }
 
-    handleChange(id, title) {
+    handleChange = (id, title) => {
         axios.post("/edit_todo", {
             title: title,
             done: this.props.done,
@@ -123,7 +115,7 @@ class TodoList extends React.Component<Props, State> {
 
     render() {
         const tableBody = <DisplayTodos handleUpdate={this.handleUpdate} handleChange={this.handleChange}
-                                        handleDelete={this.handleDelete} handleEdit={this.handleEdit}
+                                        handleEdit={this.handleEdit}
                                         done={this.props.done} todos={this.props.todos} editId={this.state.editId}/>
         const displayTable = <DisplayTable body={tableBody}/>
 

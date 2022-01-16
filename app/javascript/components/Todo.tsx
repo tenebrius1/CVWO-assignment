@@ -66,33 +66,26 @@ function SearchTodoForm(props) {
 }
 
 class Todo extends React.Component<Props, State> {
-    constructor(props) {
-        super(props);
-        this.updateLists = this.updateLists.bind(this);
-        this.logout = this.logout.bind(this);
-        this.handleSearch = this.handleSearch.bind(this);
-    }
-
     state: State = {
         user: this.props.current_user,
         incomplete: this.props.incomplete,
         complete: this.props.complete,
     };
 
-    logout() {
+    logout = () => {
         axios.delete("/logout").then(res => {
             location.href = res.data.url;
         })
     }
 
-    updateLists(incomplete, complete) {
+    updateLists = (incomplete, complete) => {
         this.setState({
             incomplete: incomplete,
             complete: complete,
         })
     }
 
-    handleSearch(query) {
+    handleSearch = query => {
         axios.post("/search", {
             query: query,
         }).then(res => {
@@ -103,7 +96,7 @@ class Todo extends React.Component<Props, State> {
         })
     }
 
-    handleSubmit(new_todo) {
+    handleSubmit = (new_todo) => {
         axios.post("/todos", {
             todo: {
                 title: new_todo,
