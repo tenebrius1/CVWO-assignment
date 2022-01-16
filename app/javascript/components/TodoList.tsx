@@ -16,7 +16,65 @@ interface State {
     editId: number;
 }
 
+function DisplayTodos(props) {
+    return (
+        <tbody>
+        {props.todos.map((todo) => {
+            // If todo is marked as done, we add a strikethrough style to it
+            let displayName = props.done
+                ? <td className="todo-strike" onClick={() => props.handleEdit(todo.id)}>{todo.title}</td>
+                : <td onClick={() => props.handleEdit(todo.id)}>{todo.title}</td>
+
+            // Checks whether the row is flagged as being edited, if yes change it to a text field
+            if (props.editId === todo.id) {
+                displayName =
+                    <td>
+                        <Form.Control type="text" defaultValue={todo.title}
+                                      onBlur={event => props.handleChange(todo.id, event.target.value)}/>
+                    </td>
+            }
+
+            return (
+                <tr key={todo.id}>
+                    <td>
+                        <Form.Check defaultChecked={props.done} type="checkbox"
+                                    onClick={() => props.handleUpdate(todo.title)}/>
+                    </td>
+                    {displayName}
+                    <td>
+                        <TrashFill onClick={() => props.handleDelete(todo.title)} className="trash-icon"/>
+                    </td>
+                </tr>
+            )
+        })}
+        </tbody>
+    )
+}
+
+function DisplayTable(props) {
+    return (
+        <Table responsive>
+            <thead>
+            <tr>
+                <th>Done?</th>
+                <th>Task Name</th>
+                <th></th>
+            </tr>
+            </thead>
+            {props.body}
+        </Table>
+    )
+}
+
 class TodoList extends React.Component<Props, State> {
+    constructor(props) {
+        super(props);
+        this.handleUpdate = this.handleUpdate.bind(this);
+        this.handleChange = this.handleChange.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
+    }
+
     state: State = {
         incomplete_to_complete: this.props.incomplete_to_complete,
         editId: -1,
@@ -60,40 +118,10 @@ class TodoList extends React.Component<Props, State> {
     }
 
     render() {
-        const todoItems =
-            <Table responsive>
-                <thead>
-                <tr>
-                    <th>Done?</th>
-                    <th>Task Name</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.props.todos.map((todo) => {
-                    let displayName = this.props.done
-                        ? <td className="todo-strike" onClick={() => this.handleEdit(todo.id)}>{todo.title}</td>
-                        : <td onClick={() => this.handleEdit(todo.id)}>{todo.title}</td>
-                    displayName = this.state.editId === todo.id
-                        ? <td>
-                            <Form.Control type="text" defaultValue={todo.title}
-                                          onBlur={event => this.handleChange(todo.id, event.target.value)}/>
-                        </td>
-                        : displayName
-                    return (<tr key={todo.id}>
-                        <td>
-                            <Form.Check defaultChecked={this.props.done} type="checkbox"
-                                        onClick={() => this.handleUpdate(todo.title)}/>
-                        </td>
-                        {displayName}
-                        <td>
-                            <TrashFill onClick={() => this.handleDelete(todo.title)} className="trash-icon"/>
-                        </td>
-                    </tr>)
-                })
-                }
-                </tbody>
-            </Table>
+        const tableBody = <DisplayTodos handleUpdate={this.handleUpdate} handleChange={this.handleChange}
+                                        handleDelete={this.handleDelete} handleEdit={this.handleEdit}
+                                        done={this.props.done} todos={this.props.todos} editId={this.state.editId}/>
+        const displayTable = <DisplayTable body={tableBody}/>
 
         return (
             <Row className="mt-5">
@@ -101,7 +129,7 @@ class TodoList extends React.Component<Props, State> {
                     <h3>
                         {this.props.title} ({this.props.todos.length})
                     </h3>
-                    {todoItems}
+                    {displayTable}
                 </Col>
             </Row>
         )
