@@ -1,20 +1,24 @@
-import React from "react"
-import {Col, Form, Button, Container, Row, Navbar, InputGroup, Alert} from "react-bootstrap";
-import {Lock, EyeFill, EyeSlashFill} from "react-bootstrap-icons";
-import * as yup from 'yup'
-import {Formik} from "formik";
-import axios from "axios"
+import * as React from 'react';
+import {Col, Form, Button, Container, Row, Navbar, InputGroup, Alert} from 'react-bootstrap';
+import {Lock, EyeFill, EyeSlashFill} from 'react-bootstrap-icons';
+import * as yup from 'yup';
+import * as Formik from 'formik';
+import axios from 'axios';
 
-class Signin extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show: false,
-            passwordShown: false,
-            type: "",
-            msg: ""
-        };
-    }
+interface State {
+    show: boolean;
+    passwordShown: boolean;
+    type: string;
+    msg: string;
+}
+
+class Signin extends React.Component<{}, State> {
+    state: State = {
+        show: false,
+        passwordShown: false,
+        type: "",
+        msg: "",
+    };
 
     schema = yup.object().shape({
         username: yup.string().required(),
@@ -46,14 +50,14 @@ class Signin extends React.Component {
                     <Container>
                         <Navbar.Brand href="/">CVWO Todo App</Navbar.Brand>
                         <Navbar.Toggle/>
-                        <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Collapse className="justify-content-end" role="navigation">
                             <Navbar.Text>
                                 <a href="/sign_up">Sign up</a>
                             </Navbar.Text>
                         </Navbar.Collapse>
                     </Container>
                 </Navbar>
-                <Formik
+                <Formik.Formik
                     validationSchema={this.schema}
                     onSubmit={(values) => {
                         axios.post("/sign_in", {
@@ -79,10 +83,7 @@ class Signin extends React.Component {
                     {({
                           handleSubmit,
                           handleChange,
-                          handleBlur,
                           values,
-                          touched,
-                          isValid,
                           errors,
                       }) => (
                         <Container>
@@ -132,10 +133,10 @@ class Signin extends React.Component {
                             </Row>
                         </Container>
                     )}
-                </Formik>
+                </Formik.Formik>
             </>
         )
     }
 }
 
-export default Signin
+export default Signin;

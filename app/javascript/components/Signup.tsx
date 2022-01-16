@@ -1,20 +1,24 @@
-import React from "react"
+import * as React from "react"
 import {Col, Form, Button, Container, Row, Navbar, InputGroup, Alert} from "react-bootstrap";
 import {PersonPlus, EyeFill, EyeSlashFill} from "react-bootstrap-icons";
 import * as yup from 'yup'
 import {Formik} from "formik";
 import axios from "axios"
 
+interface State {
+    show: boolean;
+    passwordShown: boolean;
+    type: string;
+    msg: string;
+}
+
 class Signup extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            show: false,
-            passwordShown: false,
-            type: "",
-            msg: "",
-        };
-    }
+    state: State = {
+        show: false,
+        passwordShown: false,
+        type: "",
+        msg: "",
+    };
 
     schema = yup.object().shape({
         username: yup.string().required(),
@@ -46,7 +50,7 @@ class Signup extends React.Component {
                     <Container>
                         <Navbar.Brand href="/">CVWO Todo App</Navbar.Brand>
                         <Navbar.Toggle/>
-                        <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Collapse className="justify-content-end" role="navigation">
                             <Navbar.Text>
                                 <a href="/sign_in">Log In</a>
                             </Navbar.Text>
@@ -81,10 +85,7 @@ class Signup extends React.Component {
                     {({
                           handleSubmit,
                           handleChange,
-                          handleBlur,
                           values,
-                          touched,
-                          isValid,
                           errors,
                       }) => (
                         <Container>

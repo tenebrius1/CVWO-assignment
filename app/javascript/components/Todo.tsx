@@ -1,10 +1,24 @@
-import React from "react"
+import * as React from "react"
 import {Button, Col, Container, Form, Navbar, Row} from 'react-bootstrap';
 import axios from "axios";
 import TodoList from "./TodoList";
 import {Formik} from "formik";
 
-class Todo extends React.Component {
+interface Props {
+    incomplete_to_complete: boolean;
+    updateLists: Function;
+    title: string;
+    todos: any;
+    done: boolean;
+}
+
+interface State {
+    user: any;
+    incomplete: any;
+    complete: any;
+}
+
+class Todo extends React.Component<Props, State> {
     constructor(props) {
         super(props);
         this.state = {
@@ -47,7 +61,7 @@ class Todo extends React.Component {
                     <Container>
                         <Navbar.Brand>{this.state.user.username}'s Todo List</Navbar.Brand>
                         <Navbar.Toggle/>
-                        <Navbar.Collapse className="justify-content-end">
+                        <Navbar.Collapse className="justify-content-end" role="navigation">
                             <Navbar.Text>
                                 <a href="" onClick={this.logout}>Log out</a>
                             </Navbar.Text>
@@ -75,11 +89,7 @@ class Todo extends React.Component {
                     {({
                           handleSubmit,
                           handleChange,
-                          handleBlur,
                           values,
-                          touched,
-                          isValid,
-                          errors,
                       }) => (
                         <Container>
                             <Row className="mt-5">

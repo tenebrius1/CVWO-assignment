@@ -1,17 +1,25 @@
-import React from "react";
+import * as React from "react";
 import {Col, Form, Row, Table} from "react-bootstrap";
 import axios from "axios";
 import {TrashFill} from "react-bootstrap-icons"
 
-class TodoList extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            incomplete_to_complete: props.incomplete_to_complete,
-            editId: -1,
-        };
+interface Props {
+    incomplete_to_complete: boolean;
+    updateLists: Function;
+    title: string;
+    todos: any;
+    done: boolean;
+}
 
-        this.handleUpdate = this.handleUpdate.bind(this);
+interface State {
+    incomplete_to_complete: boolean;
+    editId: number;
+}
+
+class TodoList extends React.Component<Props, State> {
+    state: State = {
+        incomplete_to_complete: this.props.incomplete_to_complete,
+        editId: -1,
     }
 
     handleUpdate(title) {
@@ -52,16 +60,6 @@ class TodoList extends React.Component {
     }
 
     render() {
-        // const todoItems = this.props.todos.map((todo) =>
-        //     <div key={todo.id} className="justify-content-center align-content-center item mt-2">
-        //         <Form.Check
-        //             defaultChecked={this.props.done}
-        //             type="checkbox"
-        //             label={todo.title}
-        //             onClick={() => this.handleUpdate(todo.title)}
-        //         />
-        //     </div>
-        // )
         const todoItems =
             <Table responsive>
                 <thead>
@@ -79,7 +77,7 @@ class TodoList extends React.Component {
                     displayName = this.state.editId === todo.id
                         ? <td>
                             <Form.Control type="text" defaultValue={todo.title}
-                                          onBlur={(e) => this.handleChange(todo.id, e.target.value)}/>
+                                          onBlur={event => this.handleChange(todo.id, event.target.value)}/>
                         </td>
                         : displayName
                     return (<tr key={todo.id}>
