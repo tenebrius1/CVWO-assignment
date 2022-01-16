@@ -16,31 +16,35 @@ interface State {
     editId: number;
 }
 
+function NameDisplay(props) {
+    // If todo is marked as done, we add a strikethrough style to it
+    let displayName = props.done
+        ? <td className="todo-strike" onClick={() => props.handleEdit(props.todo.id)}>{props.todo.title}</td>
+        : <td onClick={() => props.handleEdit(props.todo.id)}>{props.todo.title}</td>
+
+    // Checks whether the row is flagged as being edited, if yes change it to a text field
+    if (props.editId === props.todo.id) {
+        displayName =
+            <td>
+                <Form.Control type="text" defaultValue={props.todo.title}
+                              onBlur={event => props.handleChange(props.todo.id, event.target.value)}/>
+            </td>
+    }
+    return displayName;
+}
+
 function DisplayTodos(props) {
     return (
         <tbody>
         {props.todos.map((todo) => {
-            // If todo is marked as done, we add a strikethrough style to it
-            let displayName = props.done
-                ? <td className="todo-strike" onClick={() => props.handleEdit(todo.id)}>{todo.title}</td>
-                : <td onClick={() => props.handleEdit(todo.id)}>{todo.title}</td>
-
-            // Checks whether the row is flagged as being edited, if yes change it to a text field
-            if (props.editId === todo.id) {
-                displayName =
-                    <td>
-                        <Form.Control type="text" defaultValue={todo.title}
-                                      onBlur={event => props.handleChange(todo.id, event.target.value)}/>
-                    </td>
-            }
-
             return (
                 <tr key={todo.id}>
                     <td>
                         <Form.Check defaultChecked={props.done} type="checkbox"
                                     onClick={() => props.handleUpdate(todo.title)}/>
                     </td>
-                    {displayName}
+                    <NameDisplay done={props.done} todo={todo} handleEdit={props.handleEdit} editId={props.editId}
+                                 handleChange={props.handleChange}/>
                     <td>
                         <TrashFill onClick={() => props.handleDelete(todo.title)} className="trash-icon"/>
                     </td>
