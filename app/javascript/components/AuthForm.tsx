@@ -1,7 +1,7 @@
 import * as React from 'react'
 import * as yup from 'yup';
 import * as Formik from 'formik';
-import {Lock, EyeFill, EyeSlashFill} from 'react-bootstrap-icons';
+import {EyeFill, EyeSlashFill} from 'react-bootstrap-icons';
 import axios from "axios";
 import {Alert, Button, Col, Container, Form, InputGroup, Row} from "react-bootstrap";
 
@@ -19,7 +19,33 @@ interface State {
     msg: string;
 }
 
+function CTAButton(props) {
+    return (
+        <div className="d-grid gap-2 mt-4">
+            <Button variant="primary" type="submit">
+                {props.buttonText}
+            </Button>
+        </div>
+    )
+}
+
+function ErrorAlert(props) {
+    return (
+        <Alert variant={props.variant} show={props.show}
+               onClose={() => props.setShow(false)} dismissible>
+            <p>
+                {props.msg}
+            </p>
+        </Alert>
+    )
+}
+
 class AuthForm extends React.Component<Props, State> {
+    constructor(props) {
+        super(props);
+        this.setShow = this.setShow.bind(this);
+    }
+
     state: State = {
         show: false,
         passwordShown: false,
@@ -47,6 +73,24 @@ class AuthForm extends React.Component<Props, State> {
         this.setState({show: b})
     }
 
+    handleSubmit(username, password) {
+        let url = this.props.url;
+        axios.post(url, {
+            username: username,
+            password: password
+        }).then(res => {
+            if (res.data.url) {
+                location.href = res.data.url;
+            } else {
+                this.setState({
+                    show: true,
+                    type: res.data["type"],
+                    msg: res.data["msg"],
+                });
+            }
+        })
+    }
+
     render() {
         const eye = <EyeFill/>
         const eyeSlash = <EyeSlashFill/>
@@ -55,22 +99,8 @@ class AuthForm extends React.Component<Props, State> {
         return (
             <Formik.Formik
                 validationSchema={this.schema}
-                onSubmit={(values) => {
-                    let url = this.props.url;
-                    axios.post(url, {
-                        username: values.username,
-                        password: values.password
-                    }).then(res => {
-                        if (res.data.url) {
-                            location.href = res.data.url;
-                        } else {
-                            this.setState({
-                                show: true,
-                                type: res.data["type"],
-                                msg: res.data["msg"],
-                            });
-                        }
-                    })
+                onSubmit={values => {
+                    this.handleSubmit(values.username, values.password)
                 }}
                 initialValues={{
                     username: '',
@@ -114,17 +144,9 @@ class AuthForm extends React.Component<Props, State> {
                                             </Form.Control.Feedback>
                                         </InputGroup>
                                     </Form.Group>
-                                    <Alert variant={this.classes[this.state.type]} show={this.state.show}
-                                           onClose={() => this.setShow(false)} dismissible>
-                                        <p>
-                                            {this.state.msg}
-                                        </p>
-                                    </Alert>
-                                    <div className="d-grid gap-2 mt-4">
-                                        <Button variant="primary" type="submit">
-                                            {this.props.buttonText}
-                                        </Button>
-                                    </div>
+                                    <ErrorAlert variant={this.classes[this.state.type]} show={this.state.show}
+                                                setShow={this.setShow} msg={this.state.msg}/>
+                                    <CTAButton buttonText={this.props.buttonText}/>
                                 </Form>
                             </Col>
                         </Row>
