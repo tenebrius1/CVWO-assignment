@@ -8,22 +8,13 @@ class RegistrationsController < ApplicationController
 
   # Handles creation of new users
   def create
-    @user = User.new(user_params)
+    @user = User.new(:username => params[:username], :password => params[:password])
     if @user.save
-      puts "hello"
       # stores saved user id in a session
       session[:user_id] = @user.id
-      render json: {url: sign_in_path}
+      render json: { url: sign_in_path }
     else
-      puts "here"
-      render json: {type: "error", msg: "Username is already taken, please choose another username!"}
+      render json: { type: "error", msg: "Username is already taken, please choose another username!" }
     end
-  end
-
-  private
-
-  def user_params
-    # strong parameters
-    params.require(:user).permit(:username, :password)
   end
 end

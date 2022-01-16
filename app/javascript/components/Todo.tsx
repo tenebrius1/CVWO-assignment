@@ -1,7 +1,8 @@
 import * as React from "react"
-import {Button, Col, Container, Form, Navbar, Row} from 'react-bootstrap';
+import {Button, Col, Container, Form, Row} from 'react-bootstrap';
 import axios from "axios";
 import TodoList from "./TodoList";
+import MyNavBar from "./MyNavBar";
 import {Formik} from "formik";
 
 interface Props {
@@ -10,6 +11,9 @@ interface Props {
     title: string;
     todos: any;
     done: boolean;
+    current_user: any;
+    incomplete: any;
+    complete: any;
 }
 
 interface State {
@@ -21,14 +25,15 @@ interface State {
 class Todo extends React.Component<Props, State> {
     constructor(props) {
         super(props);
-        this.state = {
-            user: props.current_user,
-            incomplete: props.incomplete,
-            complete: props.complete,
-        };
-
         this.updateLists = this.updateLists.bind(this);
+        this.logout = this.logout.bind(this);
     }
+
+    state: State = {
+        user: this.props.current_user,
+        incomplete: this.props.incomplete,
+        complete: this.props.complete,
+    };
 
     logout() {
         axios.delete("/logout").then(res => {
@@ -57,17 +62,7 @@ class Todo extends React.Component<Props, State> {
     render() {
         return (
             <>
-                <Navbar bg="light" variant="light">
-                    <Container>
-                        <Navbar.Brand>{this.state.user.username}'s Todo List</Navbar.Brand>
-                        <Navbar.Toggle/>
-                        <Navbar.Collapse className="justify-content-end" role="navigation">
-                            <Navbar.Text>
-                                <a href="" onClick={this.logout}>Log out</a>
-                            </Navbar.Text>
-                        </Navbar.Collapse>
-                    </Container>
-                </Navbar>
+                <MyNavBar callBack={this.logout} title={this.state.user.username + "'s Todo List"} rightNavText="Log Out" />
                 <Formik
                     onSubmit={(values) => {
                         axios.post("/todos", {
