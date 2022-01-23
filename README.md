@@ -1,3 +1,4 @@
+[![Maintainability](https://api.codeclimate.com/v1/badges/37aa6548a95626aca61a/maintainability)](https://codeclimate.com/github/tenebrius1/CVWO-assignment/maintainability)
 # CVWO Assignment Submission:
 
 ## Name
