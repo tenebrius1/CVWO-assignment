@@ -1,24 +1,21 @@
-# README
+# CVWO Assignment Submission:
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Name
 
-Things you may want to cover:
+```
+Tan Yi Guan
+```
+## Matriculation Number:
 
-* Ruby version
+```
+A0217680A```
+## Github Page:
 
-* System dependencies
+```
+https://github.com/tenebrius1/CVWO-assignment
+```
+## Heroku Link:
 
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+```
+https://todo-list-yg.herokuapp.com/
+```
